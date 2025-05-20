@@ -9,7 +9,6 @@
     <p v-if="successMessage" style="color: green;">{{ successMessage }}</p>
 
     <!-- 错误消息 -->
-    <!-- 这里显示后端返回的通用错误信息 -->
     <p v-if="errorMessage" style="color: red;">{{ errorMessage }}</p>
 
     <!-- 广告发布表单 -->
@@ -18,8 +17,6 @@
         <label for="title">广告标题:</label>
         <!-- v-model 双向绑定 input 的值到 adData.title -->
         <input type="text" id="title" v-model="adData.title" required>
-        <!-- 如果后端返回的是字段级别的错误，可以在这里显示，但根据您提供的后端代码，目前只能显示通用错误 -->
-        <!-- <p v-if="validationErrors.title">{{ validationErrors.title }}</p> -->
       </div>
 
       <div>
@@ -55,9 +52,9 @@ const router = useRouter(); // 获取路由器实例
 // 定义响应式数据来存储表单输入和提交状态
 const adData = ref({
   title: '',
-  imageUrl: '', // 注意这里使用了驼峰命名，提交时需要转换为 snake_case
+  imageUrl: '',
   targetUrl: '', // 注意这里使用了驼峰命名
-  content: '' // 广告内容，虽然后端没有处理，但前端可以先加着
+  content: '' // 广告内容，后端没有处理
 });
 
 const isSubmitting = ref(false); // 提交状态，防止重复点击
@@ -87,14 +84,10 @@ const handleSubmit = async () => {
   }
 
   // 3. 准备要发送到后端的数据
-  // 注意：后端期望的是 snake_case 格式的字段名 (title, image_url, target_url)
-  // 前端为了遵循 JS 习惯使用了 camelCase (title, imageUrl, targetUrl)
   const payload = {
     title: adData.value.title,
     image_url: adData.value.imageUrl, // 转换为 snake_case
     target_url: adData.value.targetUrl, // 转换为 snake_case
-    // content 字段后端未处理，暂时不发送，或者发送了后端忽略
-    // content: adData.value.content
   };
 
   try {
@@ -107,7 +100,6 @@ const handleSubmit = async () => {
     });
 
     // 5. 处理后端成功响应 (状态码 201)
-    // 根据您提供的结构 {"message":"广告提交成功，等待审核","data":{"new_ad_id":10}}
     if (response.data && response.data.message && response.data.data && response.data.data.new_ad_id) {
       successMessage.value = response.data.message + ` (新广告ID: ${response.data.data.new_ad_id})`;
       console.log("广告发布成功:", response.data);
@@ -149,8 +141,6 @@ const handleSubmit = async () => {
       } else if (err.response.data && err.response.data.error) {
         // 显示后端返回的通用错误信息 (例如验证错误)
         errorMessage.value = `发布广告失败: ${err.response.data.error}`;
-        // 如果后端返回字段级别的错误，这里需要额外的逻辑来解析并赋值给 validationErrors.value
-        // 例如：if (err.response.data.errors) { validationErrors.value = err.response.data.errors; }
 
       } else {
         // 显示其他类型的后端错误信息
@@ -175,9 +165,8 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-/* 这里可以添加 CreateAdPage 的样式 */
 h1 {
-  color: green; /* 临时加个样式方便区分 */
+  color: green;
 }
 
 form div {

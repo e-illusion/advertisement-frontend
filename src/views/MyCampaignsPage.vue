@@ -185,7 +185,6 @@ const handleCancel = async (campaignId) => {
 
     try {
         // 发送 PATCH 请求到 /my-campaigns/{id}/cancel 接口
-        // 后端 CancelCampaignHandler 不需要请求体
         const response = await axios.patch(`http://localhost:8080/my-campaigns/${campaignId}/cancel`, {}, { // 发送空请求体 {}
             headers: {
                 'Authorization': `Bearer ${token}`,

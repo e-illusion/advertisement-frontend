@@ -51,7 +51,6 @@ const handleLogin = async () => {
       password: password.value,
     });
 
-    // --- *** 关键修改：保存 Token 和用户信息 *** ---
     if (response.data && response.data.data && response.data.data.token) {
       const { token, id, username: loggedInUsername, role } = response.data.data; // 解构赋值获取 token, id, username, role
 
@@ -73,7 +72,6 @@ const handleLogin = async () => {
     }
 
   } catch (err) {
-    // ... (错误处理逻辑不变) ...
     console.error('登录请求失败:', err);
      if (err.response) {
          if (err.response.data && err.response.data.error) {
@@ -94,8 +92,6 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
-/* 您可以在这里添加登录页面的样式 */
-/* scoped 确保样式只应用于当前组件 */
 form div {
   margin-bottom: 15px;
 }

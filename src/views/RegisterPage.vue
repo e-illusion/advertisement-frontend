@@ -47,22 +47,15 @@ const handleRegister = async () => {
       password: password.value
     });
 
-    // --- 修改这里的成功判断逻辑 ---
-    // 根据后端返回的 {"message": "注册成功"} 结构来判断
-    // 如果 response.data 存在且 message 字段存在，我们就认为是成功
     if (response.data && response.data.message) {
-        // 我们可以进一步检查 message 的具体内容，但仅判断存在通常够了
-        // 暂时先不检查 message 的具体内容，只判断 response.data.message 存在
           message.value = response.data.message + '！即将跳转到登录页...'; // 使用后端返回的成功消息
           console.log("注册成功响应:", response.data); // 打印成功响应到控制台
-
           // 注册成功后，延迟一段时间跳转到登录页
           setTimeout(() => {
             router.push('/login');
           }, 2000); // 2秒后跳转
 
     } else {
-      // 如果 response.data 不存在或者没有 message 字段，认为是未知错误
       message.value = '注册失败: 未知响应结构';
       console.error("注册失败: 未知响应结构", response); // 打印完整的响应对象
     }
@@ -70,10 +63,6 @@ const handleRegister = async () => {
   } catch (error) {
     console.error('注册请求失败:', error);
     if (error.response) {
-        // 后端返回了错误响应 (例如 409 Conflict)
-        // 尝试显示后端返回的 msg 字段 (如果有的话，虽然注册成功响应没有)，
-        // 或者使用 error.response.data 中可能的错误信息，
-        // 或者回退到状态文本
         message.value = `注册失败: ${error.response.data?.msg || error.response.data?.message || error.response.statusText}`;
         console.error("注册失败响应:", error.response.data); // 打印失败响应数据
     } else if (error.request) {
@@ -86,8 +75,6 @@ const handleRegister = async () => {
 </script>
 
 <style scoped>
-/* 您可以在这里添加注册页面的样式 */
-/* scoped 确保样式只应用于当前组件 */
 form div {
   margin-bottom: 15px;
 }

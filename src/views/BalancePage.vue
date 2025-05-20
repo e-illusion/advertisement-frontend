@@ -137,15 +137,11 @@ const fetchBalance = async () => {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
-    // 根据您的后端 webutil.Response 结构，数据在 response.data.data 中
     if (response.data && response.data.data) {
-        // 后端 Balance 和 Currency 字段在 JSON 中是小写 balance 和 currency
-        // 并且 Balance 字段是分，需要除以 100.0
         balance.value = response.data.data.balance / 100.0;
         currency.value = response.data.data.currency;
         console.log("获取余额成功:", response.data.data); // 打印后端 Data 的内容
     } else {
-        // 即使后端返回成功状态码，但 data 结构不符合预期
        errorBalance.value = `获取余额失败: 响应结构异常 ${JSON.stringify(response.data)}`;
        console.error("获取余额失败: 响应结构异常", response.data);
     }
@@ -161,7 +157,6 @@ const fetchBalance = async () => {
         // setTimeout(() => { router.push('/login'); }, 2000); // 避免多次重定向，交给 useAuth 处理
         checkAuthStatus(); // 触发 useAuth 检查，它会处理重定向
       } else {
-         // 尝试从后端错误响应中获取错误信息
         errorBalance.value = `获取余额失败: ${err.response.data?.error || err.response.data?.msg || err.response.statusText || '未知错误'}`;
       }
       console.error("获取余额失败响应:", err.response.data);
@@ -201,7 +196,6 @@ const fetchRechargeHistory = async () => {
      if (filterMaxAmount.value !== null && filterMaxAmount.value >= 0) {
         params.append('max_amount', filterMaxAmount.value.toString());
     }
-    // 日期输入框通常返回 YYYY-MM-DD 格式字符串，符合后端要求
     if (filterStartDate.value) {
         params.append('start_date', filterStartDate.value);
     }
@@ -209,7 +203,6 @@ const fetchRechargeHistory = async () => {
         params.append('end_date', filterEndDate.value);
     }
 
-    // 发送 GET 请求到 /recharges 接口
     const response = await axios.get(`http://localhost:8080/recharges?${params.toString()}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -293,8 +286,6 @@ const handleRecharge = async () => {
         });
 
         // 4. 处理后端响应
-        // 假设后端成功时返回 {"code": 0, "message": "充值成功！", "data": {"transaction_id": "..."}}
-        // 检查 response.data.message (小写 m)
         if (response.data && response.data.message) {
              rechargeMessage.value = response.data.message; // 使用小写 message
              console.log("充值请求成功:", response.data);
@@ -316,9 +307,6 @@ const handleRecharge = async () => {
         if (err.response) {
              if (err.response.status === 401 || err.response.status === 403) {
                  rechargeError.value = '登录状态无效或无权限，请重新登录。';
-                 // localStorage.removeItem('jwt_token'); // useAuth 内部会清理
-                 // localStorage.removeItem('user_info'); // useAuth 内部会清理
-                 // setTimeout(() => { router.push('/login'); }, 2000); // 避免多次重定向，交给 useAuth 处理
                  checkAuthStatus(); // 触发 useAuth 检查，它会处理重定向
             } else {
                 // 尝试从后端错误响应中获取错误信息
@@ -353,10 +341,8 @@ const formatDateTime = (dateTimeString) => {
         const date = new Date(dateTimeString);
          // 检查日期是否有效，防止 Invalid Date
          if (!isNaN(date.getTime())) {
-             // 使用浏览器本地格式，或者自定义格式
+             // 使用浏览器本地格式
              const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-             // 可选：如果 dateTimeString 是 UTC 时间 (带 Z)，toLocaleTimeString 可能需要 options.timeZone: 'UTC' 或其他处理
-             // 简单起见，先使用默认的本地时间格式
              return new Intl.DateTimeFormat('zh-CN', options).format(date);
         }
     } catch (e) {
@@ -376,7 +362,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* 您可以在这里添加余额和充值页面的样式 */
 h1 {
   color: purple;
 }

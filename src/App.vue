@@ -2,18 +2,7 @@
   <div>
     <header>
       <nav>
-        <!--
-          这里使用 <template> 标签和 v-if/v-else 来根据用户的登录状态
-          条件性地渲染不同的导航链接组。
-          <template> 是一个特殊的标签，它本身不会渲染任何 HTML 元素，
-          只用于逻辑分组，非常适合配合 v-if/v-else 使用。
-        -->
-
-        <!-- 未登录状态显示的链接 -->
-        <!-- isAuthenticated 是我们在 <script setup> 中定义的一个响应式变量 -->
         <template v-if="!isAuthenticated">
-          <!-- 这里的 router-link to="/" 会被路由守卫重定向到 /login -->
-          <!-- <router-link to="/">首页</router-link> | -->
           <router-link to="/register">注册</router-link> |
           <router-link to="/login">登录</router-link>
         </template>
@@ -34,17 +23,12 @@
         </template>
       </nav>
     </header>
-
-    <!--
-      router-view 组件会根据当前路由显示对应的页面组件。
-      路由守卫在这里起作用，在 router-view 渲染页面之前进行导航判断。
-    -->
     <router-view />
   </div>
 </template>
 
 <script setup>
-// 引入需要的 Vue 和 Vue Router 功能
+
 import { onMounted, watch } from 'vue'; // 引入 watch
 import { useRouter, useRoute } from 'vue-router'; // 引入 useRoute
 import { useAuth } from './composables/useAuth'; // 引入 useAuth 组合式函数
@@ -66,7 +50,6 @@ watch(route, (newRoute, oldRoute) => {
    checkAuthStatus(); // 路由变化时也检查认证状态
 });
 
-// 退出逻辑仍然在这里，因为它涉及到路由跳转
 const handleLogout = () => {
   console.log('用户执行退出操作');
   localStorage.removeItem('jwt_token');
@@ -78,10 +61,6 @@ const handleLogout = () => {
 </script>
 
 <style scoped>
-/*
-  这里的样式部分保留您已有的样式，或者使用我之前提供的简单样式。
-  scoped 属性确保这里的样式只应用于当前的 App.vue 组件。
-*/
 header {
   line-height: 1.5;
   /* max-height: 100vh; */ /* 根据需要调整 */

@@ -119,7 +119,6 @@ const fetchMyAds = async () => {
         }, 2000);
 
       } else {
-        // 显示后端返回的其他错误信息 (如果后端有提供 msg 或 message 字段)
         error.value = `获取广告列表失败: ${err.response.data?.msg || err.response.data?.message || err.response.statusText}`;
       }
       console.error("获取我的广告失败响应:", err.response.data);
@@ -154,7 +153,6 @@ const isImageUrl = (url) => {
 </script>
 
 <style scoped>
-/* 这里可以添加 MyAdsPage 的样式 */
 h1 {
   color: blue; /* 临时加个样式方便区分 */
 }

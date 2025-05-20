@@ -135,8 +135,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import axios from 'axios';
-import { useAuth } from '../composables/useAuth'; // 假设认证composables在这里
-// import { formatDate } from '../utils/formatters'; // 如果需要格式化日期（这里数据是汇总的，不需要）
+import { useAuth } from '../composables/useAuth'; 
 
 const { checkAuthStatus } = useAuth();
 

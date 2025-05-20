@@ -167,10 +167,6 @@ const fetchUserInvoices = async () => {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
-    // 假设后端成功时 Data 字段是一个数组，且 webutil.Response data field is lowercase
-    // 根据您提供的后端代码 GetUserInvoicesHandler, 返回的是 []models.InvoiceRequest 切片作为 Data
-    // 并且 webutil.Response 的 Data 字段 json tag 是 "data" (小写)
-    // 所以前端应该访问 response.data.data
     if (response.data && Array.isArray(response.data.data)) {
       invoices.value = response.data.data; // 获取发票记录列表
       console.log("用户发票记录加载成功:", invoices.value);
@@ -240,7 +236,6 @@ const handleRequestInvoice = async () => {
     }
 
     try {
-        // 准备请求体 payload，注意 JSON 字段名需要匹配后端 InvoiceRequestPayload
         const payload = {
              // Frontend v-model binds date strings directly (YYYY-MM-DD)
             startDate: invoicePeriodStartDate.value, // 对应后端 payload 的 startDate
@@ -261,7 +256,6 @@ const handleRequestInvoice = async () => {
             }
         });
 
-        // !!! 根据用户反馈的实际成功响应，成功消息在 "message" 字段 !!!
         if (response.data && response.data.message) { // 检查 "message" 字段
              requestMessage.value = response.data.message; // 使用 "message" 字段的值
              console.log("发票请求成功:", response.data);
@@ -276,18 +270,8 @@ const handleRequestInvoice = async () => {
              setTimeout(fetchUserInvoices, 500); // 延迟刷新
 
         } else {
-            // 响应结构不符合预期，但请求本身可能成功（例如 200 OK）
-             // 可以在这里尝试检查 response.data.msg 作为 fallback，或者直接报告异常结构
              requestError.value = `提交发票请求成功，但服务器返回的响应结构异常。完整响应: ${JSON.stringify(response.data)}`;
              console.warn("提交发票请求成功，但响应结构异常:", response.data);
-
-             // 尽管结构异常，通常成功提交后会返回 message 或 msg，如果都没有，就报告异常
-             // 但如果请求本身成功了（HTTP状态码），清空表单并刷新列表通常是安全的。
-             // 为了用户体验，即使结构异常，如果状态码是 2xx，我们假定成功并刷新。
-             // 但是您提供的错误信息是在 catch 块中打印的，这意味着 axios 抛出了错误，
-             // 这通常发生在非 2xx 状态码时。
-             // 所以这里的 else 块可能永远不会被执行，因为非预期结构会在 catch 中被捕获。
-             // 让我们调整 catch 块的错误信息提取逻辑。
         }
 
     } catch (err) {

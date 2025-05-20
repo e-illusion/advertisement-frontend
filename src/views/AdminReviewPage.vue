@@ -104,7 +104,6 @@ const fetchPendingAds = async () => {
       }
     });
 
-    // 假设后端成功时 Data 字段是一个数组
     if (response.data && Array.isArray(response.data.data)) {
       pendingAds.value = response.data.data;
       console.log("待审核广告加载成功:", pendingAds.value);
@@ -156,7 +155,6 @@ const fetchPendingCampaigns = async () => {
       }
     });
 
-    // 假设后端成功时 Data 字段是一个数组
     if (response.data && Array.isArray(response.data.data)) {
       pendingCampaigns.value = response.data.data;
       console.log("待审核活动加载成功:", pendingCampaigns.value);
@@ -212,13 +210,10 @@ const reviewAd = async (adId, status) => {
       }
     });
 
-    // 假设后端成功时返回 message
     if (response.data && response.data.message) {
       reviewMessage.value[adId] = { text: response.data.message, color: 'green' };
       console.log(`广告 ${adId} ${status} 成功:`, response.data);
 
-      // 成功后将该广告从 pendingAds 列表中移除 (或者重新加载列表)
-      // 简单起见，我们重新加载列表以确保数据最新
       setTimeout(fetchPendingAds, 1000); // 延迟一点重新加载，让用户看到成功消息
 
     } else {
@@ -308,15 +303,11 @@ const reviewCampaign = async (campaignId, status) => {
 
 // --- 辅助函数 ---
 const formatDate = (dateString) => {
-    // 后端返回的日期可能是 YYYY-MM-DD 格式，直接显示即可
-    // 如果后端返回的是完整的 ISO 时间字符串 (如 "2023-10-26T12:00:00Z")
-    // 你可能需要更复杂的日期格式化，例如使用 date-fns 库
     if (!dateString) return 'N/A';
     // 对于 YYYY-MM-DD 格式，直接返回
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
         return dateString;
     }
-    // 对于其他格式，尝试解析并格式化 (简单示例)
      try {
         const date = new Date(dateString);
         if (!isNaN(date)) {
@@ -351,8 +342,6 @@ onMounted(() => {
   } else {
       // 理论上路由守卫会阻止非管理员访问，但这里做个双重检查
       generalError.value = "您不是管理员，无权查看此页面。";
-      // 也可以直接重定向到首页或登录页
-      // router.push('/');
   }
 
 });

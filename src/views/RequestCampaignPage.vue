@@ -85,8 +85,7 @@ const handleSubmit = async () => {
   };
 
   try {
-    // 4. 发送 POST 请求到 /campaigns 接口 (假设是这个路径)
-    // 请根据您的 mux 配置确认正确的后端 API 路径
+    // 4. 发送 POST 请求到 /campaigns 接口
     const response = await axios.post('http://localhost:8080/campaigns', payload, {
       headers: {
         'Authorization': `Bearer ${token}`, // 携带 Token
@@ -95,7 +94,6 @@ const handleSubmit = async () => {
     });
 
     // 5. 处理后端成功响应 (状态码 201)
-    // 根据您提供的结构 {"message":"广告活动请求已提交，等待审核","data":{"campaign_id":123}}
     if (response.data && response.data.message && response.data.data && response.data.data.campaign_id) {
       successMessage.value = response.data.message + ` (新活动ID: ${response.data.data.campaign_id})`;
       console.log("广告活动请求成功:", response.data);

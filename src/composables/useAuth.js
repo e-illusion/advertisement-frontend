@@ -23,11 +23,6 @@ const checkAuthStatus = () => {
   if (userInfoString) {
     try {
       const userInfo = JSON.parse(userInfoString);
-      // 检查解析出的 user_info 对象中是否存在 role 字段且其值为 "admin"
-      // 根据您提供的后端修改，role 字段是直接在 data 下的
-      // 如果您的后端返回的是 user_info 嵌套对象，上面的 LoginPage 修改需要对应调整
-      // 但根据您提供的最终LoginHandler代码，是 data.id, data.username, data.role
-      // 所以这里需要从 localStorage 拿到的 user_info string 是包含 role 的
       if (userInfo && userInfo.role === 'admin') {
          admin = true;
       }
